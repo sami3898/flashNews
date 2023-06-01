@@ -34,7 +34,7 @@ const NewsScreen = () => {
       <View style={styles.tagContainer}>
         {tags?.map((e: string, index: number) => {
           return (
-            <View style={styles.tagStyle}>
+            <View key={e} style={styles.tagStyle}>
               <Text style={styles.tagText} key={e}>
                 {e}
               </Text>

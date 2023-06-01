@@ -1,4 +1,4 @@
-import { View, Text, Modal, ActivityIndicator, StyleSheet } from 'react-native'
+import { View, Text, Modal, ActivityIndicator, StyleSheet, Platform } from 'react-native'
 import React, { useState } from 'react'
 import {WebView} from 'react-native-webview';
 import CustomStatusBar from './CustomStatusBar';
@@ -22,8 +22,10 @@ const WebViewModal: React.FC<WebViewModalProps> = (props: WebViewModalProps) => 
     <Modal
         visible={isVisible}
         animationType='slide'
+        onRequestClose={() => toggleModal(!isVisible)}
     >
-      <CustomStatusBar contentType='light-content' backgroundColor={COLORS.RED_COLOR} />
+        <View style={{flex: 1}}>
+      {Platform.OS === 'ios' && <CustomStatusBar backgroundColor={COLORS.RED_COLOR} contentType='light-content' />}
       <NavigationHeader onPress={() => toggleModal(!isVisible)} />
       <WebView 
         source={{uri: source }}
@@ -40,6 +42,7 @@ const WebViewModal: React.FC<WebViewModalProps> = (props: WebViewModalProps) => 
         // onShouldStartLoadWithRequest={(val) => console.log(val) }
       />
       {isLoading && <ActivityIndicator style={styles.loaderStye} size={'large'} color={COLORS.RED_COLOR} />}
+      </View>
     </Modal>
   )
 }

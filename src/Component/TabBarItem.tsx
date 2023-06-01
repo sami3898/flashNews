@@ -13,7 +13,7 @@ type TabBarItemProps = {
 
 const TabBarItem = ({ title, isSelected, onPress, }: TabBarItemProps) => {
     const renderIcon = () => {
-        if(title === 'Home') {
+        if(title === 'HomeTab') {
             return "md-newspaper-outline"
         } else if (title === 'Explore') {
             return "search-outline"
