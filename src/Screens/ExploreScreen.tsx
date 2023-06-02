@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../utils/Colors";
 import AppHeader from "../Component/AppHeader";
@@ -29,6 +29,7 @@ const ExploreScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEndLoading, setIsEndLoading] = useState<boolean>(false);
   const [offset, setOffset] = useState<number>(30);
+  const [isRefresh, setIsRefresh] = useState<boolean>(false);
 
   const flatlistRef = useRef<FlatList>(null);
 
@@ -115,6 +116,13 @@ const ExploreScreen = () => {
       }
     }
   };
+
+  // TODO: on refresh get latest news
+  const onRefresh = () => {
+    setIsRefresh(true);
+    getTrendingNews();
+    setIsRefresh(false)
+  };
   
 
   return (
@@ -143,6 +151,14 @@ const ExploreScreen = () => {
         showsVerticalScrollIndicator={false}
       /> */}
       <FlatList
+        refreshing={isRefresh}
+        refreshControl={
+          <RefreshControl
+            colors={[COLORS.RED_COLOR]}
+            refreshing={isRefresh}
+            onRefresh={onRefresh}
+          />
+        }
         ref={flatlistRef}
         data={news}
         keyExtractor={(item) => item.hashId}
@@ -157,7 +173,7 @@ const ExploreScreen = () => {
         disableIntervalMomentum={true}
         maxToRenderPerBatch={7}
       />
-      {/* {isLoading && <Loader />} */}
+      {isLoading && <Loader />}
     </View>
   );
 };

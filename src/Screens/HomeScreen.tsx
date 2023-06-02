@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   FlatListProps,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../utils/Colors";
@@ -26,7 +27,6 @@ import AppHeader from "../Component/AppHeader";
 import Loader from "../Component/Loader";
 
 const HomeScreen = () => {
-
   // Ref
   const flatlistRef = useRef<FlatList>(null);
 
@@ -34,7 +34,8 @@ const HomeScreen = () => {
   const [offset, setOffset] = useState<number>(30);
   const [isEndLoading, setIsEndLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedCatagory, setSelectedCatagory] = useState<string>('');
+  const [isRefresh, setIsRefresh] = useState<boolean>(false);
+  const [selectedCatagory, setSelectedCatagory] = useState<string>("");
 
   // Selector & Dispatch
   const userSelectedTopics = useSelector(
@@ -52,62 +53,68 @@ const HomeScreen = () => {
         flatlistRef.current?.scrollToIndex({
           animated: true,
           index: 0,
-        })
+        });
       }, 200);
     }
   };
 
   // TODO: get news by cataogry
   const getNewsByCatagory = async (cataogry: string) => {
-    setIsLoading(true)
-    let res = await fetchNewsByCatagory(cataogry, 0)
+    
+    let res = await fetchNewsByCatagory(cataogry, 0);
     if (res.length > 0) {
-        dispatch(setNews(res));
-        setTimeout(() => {
-          flatlistRef.current?.scrollToIndex({
-            animated: true,
-            index: 0,
-          })
-        }, 1000);
-        setIsLoading(false)
+      dispatch(setNews(res));
+      setTimeout(() => {
+        flatlistRef.current?.scrollToIndex({
+          animated: true,
+          index: 0,
+        });
+      }, 1000);
+      
     }
-  }
+  };
 
   // TODO: onPress List Item
   const onPressItem = (item: string) => {
-    setSelectedCatagory(item)
-    getNewsByCatagory(item)
+    setIsLoading(true);
+    setSelectedCatagory(item);
+    getNewsByCatagory(item);
+    setIsLoading(false);
   };
 
   // TODO: render footer component
   const _renderFooter = () => {
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={_onEndReached}
-        activeOpacity={0.8} 
+        activeOpacity={0.8}
         style={styles.footerContainer}
-        >
-        {!isEndLoading ? (<View style={styles.loadMoreContainer}>
-          <Text style={styles.loadMoreText}>Load more stories</Text>
-          <MaterialCommunityIcons
-            name="chevron-double-down"
-            size={wp(20)}
-            color={COLORS.RED_COLOR}
-            style={{ marginLeft: 6 }}
-          />
-        </View>) : <ActivityIndicator size={"small"} color={COLORS.RED_COLOR} />}
+      >
+        {!isEndLoading ? (
+          <View style={styles.loadMoreContainer}>
+            <Text style={styles.loadMoreText}>Load more stories</Text>
+            <MaterialCommunityIcons
+              name="chevron-double-down"
+              size={wp(20)}
+              color={COLORS.RED_COLOR}
+              style={{ marginLeft: 6 }}
+            />
+          </View>
+        ) : (
+          <ActivityIndicator size={"small"} color={COLORS.RED_COLOR} />
+        )}
       </TouchableOpacity>
     );
   };
-  
 
   // TODO: onEnd flatlist
   const _onEndReached = async () => {
     if (!isEndLoading) {
       setIsEndLoading(true);
-      let res: News[] = []
-      res = await fetchNewsByCatagory(selectedCatagory, offset);
+      let res: News[] = [];
+      res = await fetchNewsByCatagory(selectedCatagory, 0);
       if (res.length > 0) {
+        res = await fetchNewsByCatagory(selectedCatagory, offset);
         setOffset(offset + 30);
         let newNewsArr = [];
         newNewsArr = [...news, ...res];
@@ -119,11 +126,18 @@ const HomeScreen = () => {
     }
   };
 
+  // TODO: on refresh get latest news
+  const onRefresh = () => {
+    setIsRefresh(true);
+    getNewsByCatagory(selectedCatagory);
+    setIsRefresh(false)
+  };
   useEffect(() => {
-    getNewsByCatagory(userSelectedTopics[0].topic)
-    setSelectedCatagory(userSelectedTopics[0].topic)
-  }, [])
-  
+    setIsLoading(true);
+    getNewsByCatagory(userSelectedTopics[0].topic);
+    setSelectedCatagory(userSelectedTopics[0].topic);
+    setIsLoading(false);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -137,6 +151,14 @@ const HomeScreen = () => {
         onPressItem={(item: string) => onPressItem(item)}
       />
       <FlatList
+        refreshing={isRefresh}
+        refreshControl={
+          <RefreshControl
+            colors={[COLORS.RED_COLOR]}
+            refreshing={isRefresh}
+            onRefresh={onRefresh}
+          />
+        }
         ref={flatlistRef}
         data={news}
         keyExtractor={(item) => item.hashId}
