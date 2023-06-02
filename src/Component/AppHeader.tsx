@@ -4,10 +4,14 @@ import { DEVICE_WIDTH, hp, wp } from '../utils/ResponsiveLayout'
 import { COLORS } from '../utils/Colors'
 import { FONTS } from '../utils/Fonts'
 
-const AppHeader = () => {
+interface AppHeaderProps {
+  title: string;
+}
+
+const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
   return (
     <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Flash News ⚡️</Text>
+        <Text style={styles.headerTitle}>{props.title}</Text>
       </View>
   )
 }

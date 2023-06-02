@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native'
 import React from 'react'
 import { News } from '../Redux/NewsSlice'
 import { DEVICE_WIDTH, hp, wp } from '../utils/ResponsiveLayout'
@@ -10,7 +10,6 @@ import {Image} from 'expo-image';
 import Animated, {BounceIn, FadeInLeft, SlideInLeft, ZoomInUp, Layout} from 'react-native-reanimated'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { HomeStackParamList } from '../../App'
-import { ExploreStackParamList } from '../../App'
 
 interface NewsItemProps {
     news: News
@@ -18,6 +17,17 @@ interface NewsItemProps {
 
 const NewsItem = (props: NewsItemProps) => {
     const {news} = props;
+
+
+    const shareNews = async () => {
+        try {
+            await Share.share({
+                message: `${news.title}\n\n${news.sourceUrl}`,
+            })
+        } catch (error) {
+            console.log("SHare error ", error)
+        }
+    }
 
     const displayDate = (date: number) => {
         let diff = moment().diff(moment(date), 'days')
@@ -47,9 +57,10 @@ const NewsItem = (props: NewsItemProps) => {
             <View style={styles.bottomContainer}>
                 <Text style={styles.timeText}>{displayDate(news.createdAt)}</Text>
                 <Ionicons 
-                    name='ios-bookmark-outline'
+                    name='ios-share-outline'
                     size={wp(20)}
                     color={COLORS.BLACK_COLOR}
+                    onPress={() => shareNews()}
                 />
             </View>
         </View>

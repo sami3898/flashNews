@@ -7,10 +7,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFonts } from "expo-font";
 import { Provider, useSelector } from "react-redux";
-import store, { RootState } from "./src/Redux/store";
+import store, { RootState, persistor } from "./src/Redux/store";
 import BottomTabBar from "./src/Component/BottomTabBar";
 import * as SplashScreen from "expo-splash-screen";
 import { News } from "./src/Redux/NewsSlice";
+import { PersistGate } from "redux-persist/integration/react";
 
 // Screens
 import PersonaliseScreen from "./src/Screens/PersonaliseScreen";
@@ -18,6 +19,8 @@ import IntroScreen from "./src/Screens/IntroScreen";
 import HomeScreen from "./src/Screens/HomeScreen";
 import ExploreScreen from "./src/Screens/ExploreScreen";
 import NewsScreen from "./src/Screens/NewsScreen";
+import BookmarkScreen from "./src/Screens/BookmarkScreen";
+
 
 export type IntroStackrParamsList = {
   IntroScreen: undefined;
@@ -33,10 +36,14 @@ export type HomeStackParamList = {
 export type ExploreStackParamList = {
   ExploreScreen: undefined;
 };
+export type BookmarkStackParamList = {
+  BookmarkScreen: undefined;
+};
 
 const IntroStack = createNativeStackNavigator<IntroStackrParamsList>();
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>();
+const BookmarkStack = createNativeStackNavigator<BookmarkStackParamList>();
 const TabStack = createBottomTabNavigator();
 const AppStack = createNativeStackNavigator();
 
@@ -64,13 +71,6 @@ const UserHomeStack = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      {/* <HomeStack.Screen 
-        name='NewsScreen'
-        component={NewsScreen}
-        options={({route}) => ({
-          headerShown: false,
-        })}
-      /> */}
     </HomeStack.Navigator>
   );
 };
@@ -84,6 +84,17 @@ const UserExploreStack = () => {
         options={{ headerShown: false }}
       />
     </ExploreStack.Navigator>
+  );
+};
+const UserBookmarkStack = () => {
+  return (
+    <BookmarkStack.Navigator>
+      <BookmarkStack.Screen
+        name="BookmarkScreen"
+        component={BookmarkScreen}
+        options={{ headerShown: false }}
+      />
+    </BookmarkStack.Navigator>
   );
 };
 
@@ -112,7 +123,7 @@ const UserTabStack = () => {
       />
       <TabStack.Screen
         name="Bookmark"
-        component={UserHomeStack}
+        component={UserBookmarkStack}
         options={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -183,7 +194,9 @@ const App = () => {
 export default () => {
   return (
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor} >
+        <App />
+      </PersistGate>
     </Provider>
   );
 };

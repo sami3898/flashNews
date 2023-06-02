@@ -11,7 +11,8 @@ interface InputProps {
   value?: string;
   onChangeText: (text: string) => void;
   secureText?: boolean;
-  onPressRightIcon?: () => void;
+  onPressRightIcon: () => void;
+  onSubmit: () => void;
   keyboardType?: 'default' | 'email-address' | 'numeric';
 }
 
@@ -23,6 +24,7 @@ const Input: React.FC<InputProps> = ({
   secureText = false,
   onPressRightIcon,
   keyboardType = 'default',
+  onSubmit
 }) => {
   const [show, setShow] = useState<boolean>(false);
 
@@ -42,7 +44,6 @@ const Input: React.FC<InputProps> = ({
           name={'search-outline'}
           size={wp(20)}
           color={COLORS.BLACK_COLOR}
-          
         />
       <TextInput
         value={value}
@@ -53,7 +54,14 @@ const Input: React.FC<InputProps> = ({
         style={styles.inputStyle}
         keyboardType={keyboardType}
         autoCapitalize="none"
+        onSubmitEditing={() => onSubmit()}
       />
+      {value && <Ionicons
+          name={'ios-close-sharp'}
+          size={wp(20)}
+          color={COLORS.BLACK_COLOR}
+          onPress={() => onPressRightIcon()}
+        />}
     </View>
   );
 };

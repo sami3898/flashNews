@@ -35,7 +35,8 @@ type NewsState = {
   topics: Topic[];
   news: News[];
   userSelectedTopics: Topic[];
-  topicNews: News[]
+  topicNews: News[],
+  savedNews: News[],
 };
 
 const initialState: NewsState = {
@@ -43,7 +44,8 @@ const initialState: NewsState = {
   topics: [],
   news: [],
   userSelectedTopics: [],
-  topicNews: []
+  topicNews: [],
+  savedNews: []
 };
 
 const NewsSlice = createSlice({
@@ -65,6 +67,9 @@ const NewsSlice = createSlice({
     setNews: (state: NewsState, action: PayloadAction<News[]>) => {
       state.news = action.payload;
     },
+    setSavedNews: (state: NewsState, action: PayloadAction<News>) => {
+      state.savedNews = [...state.savedNews, action.payload]
+    }
   },
 });
 

@@ -7,7 +7,8 @@ const ENDPOINTS = {
     TOPICS: 'topics/',
     TRENDING: 'trending',
     TOP: 'top',
-    ALL: 'all'
+    ALL: 'all',
+    SEARCH: 'search'
 }
 
 // TODO: get all news
@@ -45,6 +46,32 @@ export const fetchNewsByCatagory = async (catagory: string, offset: number) => {
             return response.data?.data?.articles;
         } else {
             return response.data.message
+        }
+    } catch (error) {
+        console.log("API ERROR: ", error)
+    }
+}
+// TODO: search news
+export const fetchNewsBySearch =async (query:string, offset: number) => {
+    try {
+        const response: AxiosResponse = await axios.get(`${BASE_URL + ENDPOINTS.SEARCH}?query=${query}&offset=${offset}&limit=30`)
+        if (response.status === 200) {
+            return response.data?.data?.articles
+        } else {
+            return response.data.message
+        }
+    } catch (error) {
+        console.log("API ERROR: ", error)
+    }
+}
+// TODO: fetch trending news
+export const fetchTrendingNews =async (offset: number) => {
+    try {
+        const response: AxiosResponse = await axios.get(`${BASE_URL + ENDPOINTS.TRENDING}?offset=${offset}&limit=30`)
+        if (response.status === 200) {
+            return response.data?.data?.articles
+        } else {
+            return response.data?.message
         }
     } catch (error) {
         console.log("API ERROR: ", error)

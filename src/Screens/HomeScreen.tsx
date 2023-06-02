@@ -23,6 +23,7 @@ import { News, setNews, setUserSelectedTopics } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
+import Loader from "../Component/Loader";
 
 const HomeScreen = () => {
 
@@ -32,6 +33,7 @@ const HomeScreen = () => {
   // State variables
   const [offset, setOffset] = useState<number>(30);
   const [isEndLoading, setIsEndLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCatagory, setSelectedCatagory] = useState<string>('');
 
   // Selector & Dispatch
@@ -57,6 +59,7 @@ const HomeScreen = () => {
 
   // TODO: get news by cataogry
   const getNewsByCatagory = async (cataogry: string) => {
+    setIsLoading(true)
     let res = await fetchNewsByCatagory(cataogry, 0)
     if (res.length > 0) {
         dispatch(setNews(res));
@@ -66,6 +69,7 @@ const HomeScreen = () => {
             index: 0,
           })
         }, 1000);
+        setIsLoading(false)
     }
   }
 
@@ -127,7 +131,7 @@ const HomeScreen = () => {
         backgroundColor={COLORS.RED_COLOR}
         contentType="light-content"
       />
-      <AppHeader />
+      <AppHeader title="Flash News ⚡️" />
       <ChipList
         list={userSelectedTopics}
         onPressItem={(item: string) => onPressItem(item)}
@@ -147,6 +151,7 @@ const HomeScreen = () => {
         disableIntervalMomentum={true}
         maxToRenderPerBatch={7}
       />
+      {isLoading && <Loader />}
     </View>
   );
 };

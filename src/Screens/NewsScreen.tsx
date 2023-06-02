@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Share } from "react-native";
 import React, { useEffect, useState } from "react";
 import { COLORS } from "../utils/Colors";
 import CustomStatusBar from "../Component/CustomStatusBar";
@@ -45,6 +45,19 @@ const NewsScreen = () => {
     );
   };
 
+  const shareNews = async () => {
+    if (news !== undefined) {
+      try {
+        await Share.share({
+            message: `${news.title}\n\n${news.sourceUrl}`,
+        })
+    } catch (error) {
+        console.log("SHare error ", error)
+    }
+    }
+    
+}
+
   return (
     <View style={styles.container}>
       <ScrollView bounces={false} style={{ marginBottom: hp(30) }}>
@@ -52,7 +65,7 @@ const NewsScreen = () => {
           backgroundColor={COLORS.RED_COLOR}
           contentType="light-content"
         />
-        <NavigationHeader onPress={() => navigation.goBack()} />
+        <NavigationHeader isRightIcon  onPressShare={() => shareNews()} onPress={() => navigation.goBack()} />
         <Image
           source={{ uri: news?.imageUrl }}
           style={styles.imageStyle}
@@ -73,7 +86,7 @@ const NewsScreen = () => {
       </ScrollView>
       <WebViewModal
         isVisible={isVisible}
-        source={news?.sourceUrl}
+        source={news?.sourceUrl !== undefined ? news?.sourceUrl : ''}
         toggleModal={(visible: boolean) => setIsVisible(visible)}
       />
     </View>
