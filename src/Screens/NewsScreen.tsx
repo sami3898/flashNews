@@ -9,25 +9,49 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { HomeStackParamList, TabStackParamList } from "../../App";
+import { HomeStackParamList } from "../../App";
 import { DEVICE_WIDTH, hp, wp } from "../utils/ResponsiveLayout";
 import { FONTS } from "../utils/Fonts";
-import { News } from "../Redux/NewsSlice";
+import { News, setSavedNews } from "../Redux/NewsSlice";
 import { Image } from "expo-image";
 import moment from "moment";
 import WebViewModal from "../Component/WebViewModal";
+import { useDispatch, useSelector } from "react-redux";
+import SnackBar from 'react-native-snackbar-component'
+import { RootState } from "../Redux/store";
 
 const NewsScreen = () => {
-  const navigation = useNavigation<NavigationProp<TabStackParamList>>();
+  const navigation = useNavigation();
   // State variable
   const [news, setNews] = useState<News>();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isSnakbarVisible, setIsSnackbarVisible] = useState<boolean>(false);
+  const [isFromBookMark, setIsFromBookmark] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+
+  // Navigation Route
   const route = useRoute<RouteProp<HomeStackParamList>>();
+
+  // Selector & Dispatch
+  const dispatch = useDispatch();
+  const savedNews = useSelector((state: RootState) => state.newsSlice.savedNews);
+
   useEffect(() => {
     if (route.params?.news !== undefined) {
       setNews(route.params?.news);
     }
+    if (route.params?.isFromBookMark !== undefined) {
+      setIsFromBookmark(!route.params?.isFromBookMark);
+    } 
   }, []);
+
+  useEffect(() => {
+    if (isSnakbarVisible) {
+      setTimeout(() => {
+        setIsSnackbarVisible(false)  
+      }, 3000);
+    } 
+  }, [isSnakbarVisible])
 
   const _renderTags = (tags: string[] | undefined) => {
     return (
@@ -45,18 +69,33 @@ const NewsScreen = () => {
     );
   };
 
+  // TODO: sahre news
   const shareNews = async () => {
     if (news !== undefined) {
       try {
         await Share.share({
-            message: `${news.title}\n\n${news.sourceUrl}`,
-        })
-    } catch (error) {
-        console.log("SHare error ", error)
+          message: `${news.title}\n\n${news.sourceUrl}`,
+        });
+      } catch (error) {
+        console.log("SHare error ", error);
+      }
     }
+  };
+
+
+
+  // TODO: save news to local storage
+  const saveNews = () => {
+    if (news !== undefined) {
+      if (savedNews.includes(news)) {
+        setSnackbarMessage('News has been already saved')
+      } else {
+        dispatch(setSavedNews(news));
+        setSnackbarMessage('News has been saved')
+      }
+      setIsSnackbarVisible(true)
     }
-    
-}
+  };
 
   return (
     <View style={styles.container}>
@@ -65,7 +104,13 @@ const NewsScreen = () => {
           backgroundColor={COLORS.RED_COLOR}
           contentType="light-content"
         />
-        <NavigationHeader isRightIcon  onPressShare={() => shareNews()} onPress={() => navigation.goBack()} />
+        <NavigationHeader
+          isShare={true}
+          isBookmark={isFromBookMark}
+          onPressShare={() => shareNews()}
+          onPressBookmark={() => saveNews()}
+          onPress={() => navigation.goBack()}
+        />
         <Image
           source={{ uri: news?.imageUrl }}
           style={styles.imageStyle}
@@ -86,8 +131,18 @@ const NewsScreen = () => {
       </ScrollView>
       <WebViewModal
         isVisible={isVisible}
-        source={news?.sourceUrl !== undefined ? news?.sourceUrl : ''}
+        source={news?.sourceUrl !== undefined ? news?.sourceUrl : ""}
         toggleModal={(visible: boolean) => setIsVisible(visible)}
+      />
+      <SnackBar 
+        visible={isSnakbarVisible}
+        textMessage={snackbarMessage}
+        bottom={20}
+        autoHidingTime={3000}
+        right={10}
+        left={10}
+        backgroundColor={COLORS.LIHT_RED_COLOR}
+        messageColor={COLORS.RED_COLOR}
       />
     </View>
   );

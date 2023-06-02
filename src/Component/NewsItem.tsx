@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native'
 import React from 'react'
-import { News } from '../Redux/NewsSlice'
+import { News, removeNews } from '../Redux/NewsSlice'
 import { DEVICE_WIDTH, hp, wp } from '../utils/ResponsiveLayout'
 import { COLORS } from '../utils/Colors'
 import { FONTS } from '../utils/Fonts'
@@ -10,15 +10,21 @@ import {Image} from 'expo-image';
 import Animated, {BounceIn, FadeInLeft, SlideInLeft, ZoomInUp, Layout} from 'react-native-reanimated'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { HomeStackParamList } from '../../App'
+import { useDispatch } from 'react-redux'
 
 interface NewsItemProps {
-    news: News
+    news: News,
+    isDelete?: boolean;
+    isFromBookMark?: boolean;
 }
 
 const NewsItem = (props: NewsItemProps) => {
-    const {news} = props;
+    const {news, isDelete = false, isFromBookMark = false} = props;
 
+    // Dispatch
+    const dispatch = useDispatch();
 
+    // TODO: Share news
     const shareNews = async () => {
         try {
             await Share.share({
@@ -29,6 +35,7 @@ const NewsItem = (props: NewsItemProps) => {
         }
     }
 
+    // TODO: Display news time
     const displayDate = (date: number) => {
         let diff = moment().diff(moment(date), 'days')
         if (diff > 3) {
@@ -38,12 +45,16 @@ const NewsItem = (props: NewsItemProps) => {
         }
     }
 
+    // TODO: Delete news from bookmark
+    const deleteNews = () => {
+        dispatch(removeNews(news))
+    }
     const navigation = useNavigation<NavigationProp<HomeStackParamList>>()
 
   return (
     <TouchableOpacity 
         style={styles.container}
-        onPress={() => navigation.navigate('NewsScreen', {news: news})}
+        onPress={() => navigation.navigate('NewsScreen', {news: news, isFromBookMark: isFromBookMark})}
 
     >
         <Image 
@@ -56,12 +67,23 @@ const NewsItem = (props: NewsItemProps) => {
             <Text numberOfLines={3} style={styles.newsTitle}>{news.title}</Text>
             <View style={styles.bottomContainer}>
                 <Text style={styles.timeText}>{displayDate(news.createdAt)}</Text>
-                <Ionicons 
-                    name='ios-share-outline'
-                    size={wp(20)}
-                    color={COLORS.BLACK_COLOR}
-                    onPress={() => shareNews()}
-                />
+                <View style={styles.iconContainer}>
+                    <Ionicons 
+                        name='ios-share-outline'
+                        size={wp(20)}
+                        color={COLORS.BLACK_COLOR}
+                        onPress={() => shareNews()}
+                    />
+                    {isDelete && <Ionicons 
+                        name='trash-outline'
+                        size={wp(20)}
+                        color={COLORS.BLACK_COLOR}
+                        onPress={() => deleteNews()}
+                        style={{marginLeft: wp(12)}}
+                    />}
+                </View>
+                
+                
             </View>
         </View>
     </TouchableOpacity>
@@ -107,5 +129,9 @@ const styles = StyleSheet.create({
         fontSize: wp(12),
         fontFamily: FONTS.POPPINS_REGULAR,
         color: COLORS.RED_COLOR,
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })

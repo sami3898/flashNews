@@ -69,10 +69,13 @@ const NewsSlice = createSlice({
     },
     setSavedNews: (state: NewsState, action: PayloadAction<News>) => {
       state.savedNews = [...state.savedNews, action.payload]
+    },
+    removeNews: (state: NewsState, action: PayloadAction<News>) => {
+      state.savedNews = state.savedNews.filter((news: News) => news.hashId !== action.payload.hashId)
     }
   },
 });
 
-export const { setTopics, setUserOnboard, setUserSelectedTopics, setNews } =
+export const { setTopics, setUserOnboard, setUserSelectedTopics, setNews, setSavedNews, removeNews } =
   NewsSlice.actions;
 export default NewsSlice.reducer;

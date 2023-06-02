@@ -31,6 +31,7 @@ export type HomeStackParamList = {
   HomeScreen: undefined;
   NewsScreen: {
     news: News;
+    isFromBookMark: boolean;
   };
 };
 export type ExploreStackParamList = {
