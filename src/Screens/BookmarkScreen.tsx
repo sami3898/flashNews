@@ -53,6 +53,13 @@ const BookmarkScreen = () => {
     }
   };
 
+  // TODO: update searched news on delete 
+  useEffect(() => {
+    if (search.length > 0) {
+      searchNews()
+    }
+  }, [savedNews])
+
   return (
     <View style={styles.container}>
       <CustomStatusBar
@@ -91,7 +98,7 @@ const BookmarkScreen = () => {
           maxToRenderPerBatch={7}
         />
       )}
-      { savedNews.length === 0 && _renderNoView()}
+      {savedNews.length === 0 && _renderNoView()}
     </View>
   );
 };

@@ -19,12 +19,13 @@ import { FONTS } from "../utils/Fonts";
 import ChipList from "../Component/ChipList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
-import { fetchAllNews, fetchNewsByCatagory } from "../utils/ApiHelper";
-import { News, setNews, setUserSelectedTopics } from "../Redux/NewsSlice";
+import { fetchAllNews, fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
+import { News, setIsNotification, setNews, setTrendingNews, setUserSelectedTopics } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
 import Loader from "../Component/Loader";
+import { setNotifications } from "../utils/Notifications";
 
 const HomeScreen = () => {
   // Ref
@@ -42,6 +43,7 @@ const HomeScreen = () => {
     (state: RootState) => state.newsSlice.userSelectedTopics
   );
   const news = useSelector((state: RootState) => state.newsSlice.news);
+  const trendingNews = useSelector((state: RootState) => state.newsSlice.trendingNews);
   const dispatch = useDispatch();
 
   // TODO: get all news
@@ -73,6 +75,15 @@ const HomeScreen = () => {
       
     }
   };
+
+  // TODO: get trending news
+  const getTrendingNews = async () => {
+    let res = await fetchTrendingNews(0);
+    if (res.length > 0) {
+        setNews(res);
+        dispatch(setTrendingNews(res))
+    }
+};
 
   // TODO: onPress List Item
   const onPressItem = (item: string) => {
@@ -137,6 +148,12 @@ const HomeScreen = () => {
     getNewsByCatagory(userSelectedTopics[0].topic);
     setSelectedCatagory(userSelectedTopics[0].topic);
     setIsLoading(false);
+    setNotifications(trendingNews)
+    .then((status: boolean) => {
+      dispatch(setIsNotification(status))
+    })
+    getTrendingNews()
+    
   }, []);
 
   return (

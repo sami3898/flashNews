@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {
   NavigationContainer,
-  getFocusedRouteNameFromRoute,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -20,7 +19,7 @@ import HomeScreen from "./src/Screens/HomeScreen";
 import ExploreScreen from "./src/Screens/ExploreScreen";
 import NewsScreen from "./src/Screens/NewsScreen";
 import BookmarkScreen from "./src/Screens/BookmarkScreen";
-
+import SettingsScreen from "./src/Screens/SettingsScreen";
 
 export type IntroStackrParamsList = {
   IntroScreen: undefined;
@@ -93,7 +92,7 @@ const UserBookmarkStack = () => {
       <BookmarkStack.Screen
         name="BookmarkScreen"
         component={BookmarkScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,}}
       />
     </BookmarkStack.Navigator>
   );
@@ -104,7 +103,7 @@ const UserTabStack = () => {
     <TabStack.Navigator
       id="tabs"
       tabBar={(props) => <BottomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: false, }}
     >
       <TabStack.Screen
         name="HomeTab"
@@ -128,11 +127,13 @@ const UserTabStack = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true
         }}
+        
       />
       <TabStack.Screen
         name="Settings"
-        component={UserHomeStack}
+        component={SettingsScreen}
         options={{
           headerShown: false,
           tabBarShowLabel: false,

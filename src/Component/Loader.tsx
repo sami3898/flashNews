@@ -18,14 +18,14 @@ export default Loader
 const styles = StyleSheet.create({
     loaderContainer: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: COLORS.WHITE_COLOR,
+        backgroundColor: 'rgba(0,0,0,0.8)',
         justifyContent: 'center',
         alignItems: 'center'
     },
     loadingText: {
         fontSize: wp(16),
         fontFamily: FONTS.POPPINS_SEMIBOLD,
-        color: COLORS.BLACK_COLOR,
+        color: COLORS.WHITE_COLOR,
         marginTop: hp(20)
     }
 })
