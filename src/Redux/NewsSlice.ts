@@ -47,7 +47,7 @@ const initialState: NewsState = {
     userSelectedTopics: [],
     trendingNews: [],
     savedNews: [],
-    isNotification: false,
+    isNotification: true,
 };
 
 const NewsSlice = createSlice({
@@ -80,6 +80,14 @@ const NewsSlice = createSlice({
                 (news: News) => news.hashId !== action.payload.hashId
             );
         },
+        updateTopics: (state: NewsState, action: PayloadAction<Topic>) => {
+            let tempTopics = state.userSelectedTopics;
+            if(tempTopics.includes(action.payload)) {
+                tempTopics = tempTopics.filter((e: Topic) => e.topic !== action.payload.topic)
+                console.log(tempTopics)
+            }
+            console.log(tempTopics.includes(action.payload))
+        },
         setIsNotification: (
             state: NewsState,
             action: PayloadAction<boolean>
@@ -98,5 +106,6 @@ export const {
     setSavedNews,
     removeNews,
     setIsNotification,
+    updateTopics
 } = NewsSlice.actions;
 export default NewsSlice.reducer;

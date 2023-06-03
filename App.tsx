@@ -20,6 +20,7 @@ import ExploreScreen from "./src/Screens/ExploreScreen";
 import NewsScreen from "./src/Screens/NewsScreen";
 import BookmarkScreen from "./src/Screens/BookmarkScreen";
 import SettingsScreen from "./src/Screens/SettingsScreen";
+import PreferencesScreen from "./src/Screens/PreferencesScreen";
 
 export type IntroStackrParamsList = {
   IntroScreen: undefined;
@@ -39,6 +40,10 @@ export type ExploreStackParamList = {
 export type BookmarkStackParamList = {
   BookmarkScreen: undefined;
 };
+export type SettingStackParamList = {
+  SettingsScreen: undefined,
+  PreferencesScreen: undefined
+}
 
 const IntroStack = createNativeStackNavigator<IntroStackrParamsList>();
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
@@ -61,17 +66,6 @@ const UserIntroStack = () => {
         options={{ headerShown: false }}
       />
     </IntroStack.Navigator>
-  );
-};
-const UserHomeStack = () => {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-    </HomeStack.Navigator>
   );
 };
 
@@ -154,6 +148,11 @@ const UserMainStack = () => {
       <AppStack.Screen
         name="NewsScreen"
         component={NewsScreen}
+        options={{ headerShown: false }}
+      />
+      <AppStack.Screen
+        name="PreferencesScreen"
+        component={PreferencesScreen}
         options={{ headerShown: false }}
       />
     </AppStack.Navigator>

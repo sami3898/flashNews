@@ -20,7 +20,7 @@ import ChipList from "../Component/ChipList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { fetchAllNews, fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
-import { News, setIsNotification, setNews, setTrendingNews, setUserSelectedTopics } from "../Redux/NewsSlice";
+import { News, setIsNotification, setNews, setTrendingNews } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
@@ -44,6 +44,7 @@ const HomeScreen = () => {
   );
   const news = useSelector((state: RootState) => state.newsSlice.news);
   const trendingNews = useSelector((state: RootState) => state.newsSlice.trendingNews);
+  const isNotification = useSelector((state: RootState) => state.newsSlice.isNotification);
   const dispatch = useDispatch();
 
   // TODO: get all news
@@ -66,6 +67,7 @@ const HomeScreen = () => {
     let res = await fetchNewsByCatagory(cataogry, 0);
     if (res.length > 0) {
       dispatch(setNews(res));
+      setIsLoading(false)
       setTimeout(() => {
         flatlistRef.current?.scrollToIndex({
           animated: true,
@@ -143,17 +145,33 @@ const HomeScreen = () => {
     getNewsByCatagory(selectedCatagory);
     setIsRefresh(false)
   };
+
+  // TODO: check notification status and subscribe
+  const checkNotification = () => {
+    if (isNotification) {
+        setNotifications(trendingNews)
+        .then((status: boolean) => {
+          dispatch(setIsNotification(status))
+        })
+    }
+  }
+
+  useEffect(() => {
+    checkNotification()
+  },[isNotification])
+
+  // TODO: update news when pref update
+  useEffect(() => {
+    getNewsByCatagory(userSelectedTopics[0].topic);
+    setSelectedCatagory(userSelectedTopics[0].topic);
+  }, [userSelectedTopics])
+
   useEffect(() => {
     setIsLoading(true);
     getNewsByCatagory(userSelectedTopics[0].topic);
     setSelectedCatagory(userSelectedTopics[0].topic);
-    setIsLoading(false);
-    setNotifications(trendingNews)
-    .then((status: boolean) => {
-      dispatch(setIsNotification(status))
-    })
+    // setIsLoading(false);
     getTrendingNews()
-    
   }, []);
 
   return (

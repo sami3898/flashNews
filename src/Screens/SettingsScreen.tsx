@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../utils/Colors";
 import CustomStatusBar from "../Component/CustomStatusBar";
@@ -11,11 +11,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { cancelNotification, setNotifications } from "../utils/Notifications";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { SettingStackParamList } from "../../App";
 
 const SettingsScreen = () => {
 
     // Selector 
     const news = useSelector((state: RootState) => state.newsSlice.news)
+
+    // Navigation
+    const navigation = useNavigation<NavigationProp<SettingStackParamList>>();
+
     // TODO: toggle notification
     const toggleNotification = async (value: boolean) => {
         if (value) {
@@ -34,7 +40,11 @@ const SettingsScreen = () => {
             <AppHeader title="Settings" />
             <View style={styles.mainContainer}>
                 <View>
-                    <View style={styles.chipContainer}>
+                    <TouchableOpacity 
+                        activeOpacity={0.8}
+                        style={styles.chipContainer}
+                        onPress={() => navigation.navigate('PreferencesScreen')}
+                    >
                         <View style={styles.rowContainer}>
                             <Ionicons
                                 name="ios-list-outline"
@@ -50,7 +60,7 @@ const SettingsScreen = () => {
                             color={COLORS.RED_COLOR}
                             style={{ height: 32 }}
                         />
-                    </View>
+                    </TouchableOpacity>
                     <View style={[styles.chipContainer, { marginTop: hp(12) }]}>
                         <View style={styles.rowContainer}>
                             <Ionicons
