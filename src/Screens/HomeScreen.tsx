@@ -20,7 +20,7 @@ import ChipList from "../Component/ChipList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { fetchAllNews, fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
-import { News, setIsNotification, setNews, setTrendingNews } from "../Redux/NewsSlice";
+import { News, setIsNotification, setNews, setTrendingNews, setUserOnboard } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
@@ -172,6 +172,7 @@ const HomeScreen = () => {
     setSelectedCatagory(userSelectedTopics[0].topic);
     // setIsLoading(false);
     getTrendingNews()
+    // dispatch(setUserOnboard(false))
   }, []);
 
   return (

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Dimensions, StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { DEVICE_WIDTH } from '../utils/ResponsiveLayout';
-
 
 type TabBarIndicatorProps = {
   tabCount: number;
@@ -24,7 +23,7 @@ const TabBarIndicator = ({
         width: DEVICE_WIDTH / tabCount,
         backgroundColor: color,
         borderRadius: height / 2,
-        position: 'absolute'
+        position: 'absolute',
       },
       animatedStyle,
     ]}

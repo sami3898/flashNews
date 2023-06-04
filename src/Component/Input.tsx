@@ -1,12 +1,11 @@
-import { View, Text, StyleSheet, TextInput, GestureResponderEvent } from 'react-native';
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
+import { View, StyleSheet, TextInput } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../utils/Colors';
 import { hp, wp } from '../utils/ResponsiveLayout';
-import {Ionicons} from '@expo/vector-icons'
 import { FONTS } from '../utils/Fonts';
 
 interface InputProps {
-  rightIcon?: string;
   placeholder: string;
   value?: string;
   onChangeText: (text: string) => void;
@@ -16,16 +15,15 @@ interface InputProps {
   keyboardType?: 'default' | 'email-address' | 'numeric';
 }
 
-const Input: React.FC<InputProps> = ({
-  rightIcon,
+const Input = ({
   placeholder,
   value = '',
   onChangeText,
   secureText = false,
   onPressRightIcon,
   keyboardType = 'default',
-  onSubmit
-}) => {
+  onSubmit,
+}: InputProps) => {
   const [show, setShow] = useState<boolean>(false);
 
   const handleTextChange = (text: string) => {
@@ -40,11 +38,7 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <View style={styles.container}>
-        <Ionicons
-          name={'search-outline'}
-          size={wp(20)}
-          color={COLORS.BLACK_COLOR}
-        />
+      <Ionicons name={'search-outline'} size={wp(20)} color={COLORS.BLACK_COLOR} />
       <TextInput
         value={value}
         placeholder={placeholder}
@@ -54,19 +48,19 @@ const Input: React.FC<InputProps> = ({
         style={styles.inputStyle}
         keyboardType={keyboardType}
         autoCapitalize="none"
-        onSubmitEditing={() => onSubmit()}
+        onSubmitEditing={onSubmit}
       />
-      {value && <Ionicons
+      {value && (
+        <Ionicons
           name={'ios-close-sharp'}
           size={wp(20)}
           color={COLORS.BLACK_COLOR}
-          onPress={() => onPressRightIcon()}
-        />}
+          onPress={handleRightIconPress}
+        />
+      )}
     </View>
   );
 };
-
-export default Input;
 
 const styles = StyleSheet.create({
   container: {
@@ -79,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: hp(12),
     paddingHorizontal: wp(12),
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   inputStyle: {
     flex: 1,
@@ -89,3 +83,5 @@ const styles = StyleSheet.create({
     fontSize: wp(14),
   },
 });
+
+export default Input;
