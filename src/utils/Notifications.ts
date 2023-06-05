@@ -69,7 +69,6 @@ const scehduleNotification = async (news: News[],hour:number, minutes: number) =
             repeats: true
         }
     })
-    console.log("Notification created with ID: ", notificationId)
 }
 
 // TODO: set notifications

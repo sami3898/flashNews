@@ -1,26 +1,23 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
-  StatusBar,
   FlatList,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
-  FlatListProps,
   RefreshControl,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../utils/Colors";
-import { DEVICE_WIDTH, hp, wp } from "../utils/ResponsiveLayout";
+import { hp, wp } from "../utils/ResponsiveLayout";
 import CustomStatusBar from "../Component/CustomStatusBar";
 import { FONTS } from "../utils/Fonts";
 import ChipList from "../Component/ChipList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { fetchAllNews, fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
-import { News, setIsNotification, setIsNotificationSubscribed, setNews, setTrendingNews, setUserOnboard } from "../Redux/NewsSlice";
+import { News, setIsNotification, setIsNotificationSubscribed, setNews, setTrendingNews } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
@@ -47,20 +44,6 @@ const HomeScreen = () => {
   const isNotification = useSelector((state: RootState) => state.newsSlice.isNotification);
   const isNotificationSubscribed = useSelector((state: RootState) => state.newsSlice.isNotificationSubscribed);
   const dispatch = useDispatch();
-
-  // TODO: get all news
-  const getAllNews = async () => {
-    let res = await fetchAllNews(0);
-    if (res.length > 0) {
-      dispatch(setNews(res));
-      setTimeout(() => {
-        flatlistRef.current?.scrollToIndex({
-          animated: true,
-          index: 0,
-        });
-      }, 200);
-    }
-  };
 
   // TODO: get news by cataogry
   const getNewsByCatagory = async (cataogry: string) => {
@@ -174,9 +157,7 @@ const HomeScreen = () => {
     setIsLoading(true);
     getNewsByCatagory(userSelectedTopics[0].topic);
     setSelectedCatagory(userSelectedTopics[0].topic);
-    // setIsLoading(false);
     getTrendingNews()
-    // dispatch(setUserOnboard(false))
   }, []);
 
   return (
