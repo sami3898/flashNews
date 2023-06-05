@@ -63,7 +63,6 @@ const PreferencesScreen = () => {
   const onPressCategory = (category: Topic, index: number) => {
     if (selectedTopics.some((e) => e.topic === category.topic)) {
       const tempArr = selectedTopics.filter((e) => e.topic !== category.topic);
-      console.log("IF TEMP ARR: ", tempArr);
       if (tempArr.length == 0) {
         setIsSnackbarVisible(true);
       } else {
