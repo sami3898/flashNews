@@ -9,15 +9,17 @@ import { FONTS } from "../utils/Fonts";
 import Switch from "../Component/Switch";
 import { Ionicons } from "@expo/vector-icons";
 import { cancelNotification, setNotifications } from "../utils/Notifications";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SettingStackParamList } from "../../App";
+import { setIsNotificationSubscribed } from "../Redux/NewsSlice";
 
 const SettingsScreen = () => {
 
     // Selector 
     const news = useSelector((state: RootState) => state.newsSlice.news)
+    const dispatch = useDispatch();
 
     // Navigation
     const navigation = useNavigation<NavigationProp<SettingStackParamList>>();
@@ -28,6 +30,8 @@ const SettingsScreen = () => {
             await setNotifications(news);
         } else {
             await cancelNotification();
+            dispatch(setIsNotificationSubscribed(false))
+            
         }
     } 
 

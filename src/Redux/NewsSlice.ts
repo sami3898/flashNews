@@ -38,6 +38,7 @@ type NewsState = {
     trendingNews: News[];
     savedNews: News[];
     isNotification: boolean;
+    isNotificationSubscribed: boolean;
 };
 
 const initialState: NewsState = {
@@ -48,6 +49,7 @@ const initialState: NewsState = {
     trendingNews: [],
     savedNews: [],
     isNotification: true,
+    isNotificationSubscribed: false,
 };
 
 const NewsSlice = createSlice({
@@ -94,6 +96,9 @@ const NewsSlice = createSlice({
         ) => {
             state.isNotification = action.payload;
         },
+        setIsNotificationSubscribed: (state: NewsState , action: PayloadAction<boolean>) => {
+            state.isNotificationSubscribed = action.payload
+        }
     },
 });
 
@@ -106,6 +111,7 @@ export const {
     setSavedNews,
     removeNews,
     setIsNotification,
+    setIsNotificationSubscribed,
     updateTopics
 } = NewsSlice.actions;
 export default NewsSlice.reducer;
