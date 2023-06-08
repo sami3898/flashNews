@@ -172,12 +172,12 @@ const App = () => {
   });
 
   useEffect(() => {
-    async function hideSpalshScreen() {
+    async function hideSplashScreen() {
       await SplashScreen.hideAsync();
     }
 
     if (fontLoaded) {
-      hideSpalshScreen();
+      hideSplashScreen();
     }
   }, [fontLoaded]);
 
