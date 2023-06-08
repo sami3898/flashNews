@@ -1,9 +1,8 @@
 import React from "react";
-import { Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import {Ionicons} from '@expo/vector-icons'
-import { hp, wp } from "../utils/ResponsiveLayout";
+import { Pressable, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { wp, hp } from "../utils/ResponsiveLayout";
 import { COLORS } from "../utils/Colors";
-import Animated from "react-native-reanimated";
 
 type TabBarItemProps = {
   title: string;
@@ -11,25 +10,29 @@ type TabBarItemProps = {
   onPress: () => void;
 };
 
-const TabBarItem = ({ title, isSelected, onPress, }: TabBarItemProps) => {
-    const renderIcon = () => {
-        if(title === 'HomeTab') {
-            return "md-newspaper-outline"
-        } else if (title === 'Explore') {
-            return "search-outline"
-        } else if (title === 'Bookmark') {
-            return "ios-bookmark-outline"
-        } else if (title === 'Settings') {
-            return "ios-settings-outline"
-        }
+const TabBarItem = ({ title, isSelected, onPress }: TabBarItemProps) => {
+  const renderIcon = () => {
+    switch (title) {
+      case "HomeTab":
+        return "md-newspaper-outline";
+      case "Explore":
+        return "search-outline";
+      case "Bookmark":
+        return "ios-bookmark-outline";
+      case "Settings":
+        return "ios-settings-outline";
+      default:
+        return undefined;
     }
+  };
+
   return (
     <Pressable style={styles.container} onPress={onPress}>
-        <Ionicons 
-            name={renderIcon()}
-            size={wp(24)}
-            color={isSelected ? COLORS.RED_COLOR : COLORS.BLACK_COLOR}
-        />
+      <Ionicons
+        name={renderIcon()}
+        size={wp(24)}
+        color={isSelected ? COLORS.RED_COLOR : COLORS.BLACK_COLOR}
+      />
     </Pressable>
   );
 };
@@ -37,10 +40,10 @@ const TabBarItem = ({ title, isSelected, onPress, }: TabBarItemProps) => {
 export default TabBarItem;
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    alignItems: "center", 
-    justifyContent: 'center',
-    paddingVertical: hp(10)
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: hp(10),
   },
 });

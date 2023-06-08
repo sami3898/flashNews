@@ -4,7 +4,6 @@ import { COLORS } from "../utils/Colors";
 import CustomStatusBar from "../Component/CustomStatusBar";
 import NavigationHeader from "../Component/NavigationHeader";
 import {
-  NavigationProp,
   RouteProp,
   useNavigation,
   useRoute,
@@ -166,7 +165,6 @@ const styles = StyleSheet.create({
     height: hp(220),
     width: DEVICE_WIDTH,
     alignSelf: "center",
-    // marginTop: hp(16)
   },
   authorText: {
     fontSize: wp(12),

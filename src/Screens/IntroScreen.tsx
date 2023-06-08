@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   FlatList,
@@ -10,7 +9,6 @@ import {
 import React, { useEffect, useRef } from "react";
 import { COLORS } from "../utils/Colors";
 import { DEVICE_HEIGHT, DEVICE_WIDTH, hp, wp } from "../utils/ResponsiveLayout";
-import { SvgFromXml } from "react-native-svg";
 import { FONTS } from "../utils/Fonts";
 import Button from "../Component/Button";
 import { NavigationProp, useNavigation } from "@react-navigation/native";

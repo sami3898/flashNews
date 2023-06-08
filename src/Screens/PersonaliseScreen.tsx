@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, StatusBar, Platform } from 'react-native'
-import React, { useEffect } from 'react'
+import { Text, SafeAreaView, StyleSheet, StatusBar, Platform } from 'react-native'
+import React from 'react'
 import { COLORS } from '../utils/Colors'
 import { hp, wp } from '../utils/ResponsiveLayout'
 import { FONTS } from '../utils/Fonts'
