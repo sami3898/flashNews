@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { COLORS } from "../utils/Colors";
 import CustomStatusBar from "../Component/CustomStatusBar";
@@ -10,6 +10,7 @@ import { wp } from "../utils/ResponsiveLayout";
 import { FONTS } from "../utils/Fonts";
 import NewsItem from "../Component/NewsItem";
 import { News } from "../Redux/NewsSlice";
+import { FlashList } from "@shopify/flash-list";
 
 const BookmarkScreen = () => {
   // State variable
@@ -82,7 +83,7 @@ const BookmarkScreen = () => {
         />
       )}
       {(savedNews.length > 0 || searchResult.length > 0) && (
-        <FlatList
+        <FlashList
           data={search ? searchResult : savedNews.slice().reverse()}
           keyExtractor={(item) => item.hashId}
           renderItem={({ item, index }) => {
@@ -95,7 +96,8 @@ const BookmarkScreen = () => {
           }}
           onEndReachedThreshold={0.5}
           disableIntervalMomentum={true}
-          maxToRenderPerBatch={7}
+          estimatedItemSize={100}
+          estimatedFirstItemOffset={60}
         />
       )}
       {savedNews.length === 0 && _renderNoView()}

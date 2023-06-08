@@ -13,11 +13,11 @@ import { DEVICE_WIDTH, hp, wp } from "../utils/ResponsiveLayout";
 import { FONTS } from "../utils/Fonts";
 import { News, setSavedNews } from "../Redux/NewsSlice";
 import { Image } from "expo-image";
-import moment from "moment";
 import WebViewModal from "../Component/WebViewModal";
 import { useDispatch, useSelector } from "react-redux";
 import SnackBar from 'react-native-snackbar-component'
 import { RootState } from "../Redux/store";
+import dayjs from 'dayjs'
 
 const NewsScreen = () => {
   const navigation = useNavigation();
@@ -119,7 +119,7 @@ const NewsScreen = () => {
         <Text
           style={styles.authorText}
         >{`Written by ${news?.authorName}`}</Text>
-        <Text style={styles.authorText}>{`Published at ${moment(
+        <Text style={styles.authorText}>{`Published at ${dayjs(
           news?.createdAt
         ).format("MMM, DD YYYY hh:mm A")}`}</Text>
         {_renderTags(news?.categoryNames)}

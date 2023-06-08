@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
@@ -16,17 +15,18 @@ import { FONTS } from "../utils/Fonts";
 import ChipList from "../Component/ChipList";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
-import { fetchAllNews, fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
+import { fetchNewsByCatagory, fetchTrendingNews } from "../utils/ApiHelper";
 import { News, setIsNotification, setIsNotificationSubscribed, setNews, setTrendingNews } from "../Redux/NewsSlice";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../Component/AppHeader";
 import Loader from "../Component/Loader";
 import { setNotifications } from "../utils/Notifications";
+import { FlashList } from "@shopify/flash-list";
 
 const HomeScreen = () => {
   // Ref
-  const flatlistRef = useRef<FlatList>(null);
+  const flatlistRef = useRef<FlashList<News>>(null);
 
   // State variables
   const [offset, setOffset] = useState<number>(30);
@@ -171,7 +171,7 @@ const HomeScreen = () => {
         list={userSelectedTopics}
         onPressItem={(item: string) => onPressItem(item)}
       />
-      <FlatList
+      <FlashList
         refreshing={isRefresh}
         refreshControl={
           <RefreshControl
@@ -192,7 +192,8 @@ const HomeScreen = () => {
         ListFooterComponent={_renderFooter}
         onEndReachedThreshold={0.5}
         disableIntervalMomentum={true}
-        maxToRenderPerBatch={7}
+        estimatedItemSize={100}
+        estimatedFirstItemOffset={80}
       />
       {isLoading && <Loader />}
     </View>

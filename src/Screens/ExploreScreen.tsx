@@ -2,7 +2,6 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList,
     TouchableOpacity,
     Alert,
     ActivityIndicator,
@@ -21,6 +20,7 @@ import { fetchNewsBySearch, fetchTrendingNews } from "../utils/ApiHelper";
 import Loader from "../Component/Loader";
 import NewsItem from "../Component/NewsItem";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FlashList } from "@shopify/flash-list";
 
 const ExploreScreen = () => {
     // State variable
@@ -34,7 +34,7 @@ const ExploreScreen = () => {
     // Dispatch
     const dispatch = useDispatch();
 
-    const flatlistRef = useRef<FlatList>(null);
+    const flatlistRef = useRef<FlashList<News>>(null);
 
     // TODO: get trending news
     const getTrendingNews = async () => {
@@ -152,7 +152,7 @@ const ExploreScreen = () => {
                 onPressRightIcon={() => setSearch("")}
             />
 
-            <FlatList
+            <FlashList
                 refreshing={isRefresh}
                 refreshControl={
                     <RefreshControl
@@ -173,7 +173,8 @@ const ExploreScreen = () => {
                 ListFooterComponent={_renderFooter}
                 onEndReachedThreshold={0.5}
                 disableIntervalMomentum={true}
-                maxToRenderPerBatch={7}
+                estimatedItemSize={100}
+                estimatedFirstItemOffset={100}
             />
             {isLoading && <Loader />}
         </View>

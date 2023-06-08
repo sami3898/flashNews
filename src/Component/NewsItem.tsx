@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import moment from 'moment';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { News, removeNews } from '../Redux/NewsSlice';
@@ -10,7 +9,9 @@ import { DEVICE_WIDTH, hp, wp } from '../utils/ResponsiveLayout';
 import { COLORS } from '../utils/Colors';
 import { FONTS } from '../utils/Fonts';
 import { HomeStackParamList } from '../../App';
+import dayjs from 'dayjs'
 
+var relativeTime = require('dayjs/plugin/relativeTime')
 interface NewsItemProps {
     news: News,
     isDelete?: boolean;
@@ -36,11 +37,12 @@ const NewsItem: React.FC<NewsItemProps> = ({
   };
 
   const displayDate = (date: number) => {
-    let diff = moment().diff(moment(date), 'days');
+    dayjs.extend(relativeTime)
+    let diff = dayjs().diff(dayjs(date), 'days');
     if (diff > 3) {
-      return moment(news.createdAt).format('MMM, DD YYYY');
+      return dayjs(news.createdAt).format('MMM, DD YYYY');
     } else {
-      return moment(news.createdAt).fromNow();
+      return dayjs(news.createdAt).fromNow();
     }
   };
 

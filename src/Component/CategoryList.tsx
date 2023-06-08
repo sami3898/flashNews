@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { hp, wp } from "../utils/ResponsiveLayout";
 import { COLORS } from "../utils/Colors";
 import { FONTS } from "../utils/Fonts";
 import { Ionicons } from "@expo/vector-icons";
 import { Topic, setUserSelectedTopics } from "../Redux/NewsSlice";
 import { useDispatch } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
 
 interface CategoryListProps {
   list: Topic[];
@@ -56,13 +57,14 @@ const CategoryList: React.FC<CategoryListProps> = ({ list }: CategoryListProps) 
   };
 
   return (
-    <FlatList
+    <FlashList
       data={list}
       keyExtractor={(item) => item.label}
       renderItem={renderItem}
       ItemSeparatorComponent={() => <View style={{ height: hp(6) }} />}
       style={{ marginVertical: 16, marginHorizontal: wp(20) }}
       extraData={selectedCategory}
+      estimatedItemSize={24}
     />
   );
 };

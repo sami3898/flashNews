@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   ViewStyle,
   TextStyle,
@@ -20,6 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Topic, setUserSelectedTopics } from "../Redux/NewsSlice";
 import SnackBar from "react-native-snackbar-component";
 import Button from "../Component/Button";
+import { FlashList } from "@shopify/flash-list";
 
 const PreferencesScreen = () => {
   // State variables
@@ -107,7 +107,7 @@ const PreferencesScreen = () => {
       />
       <NavigationHeader onPress={() => navigation.goBack()} />
       <Text style={styles.titleText}>Update your preferences</Text>
-      <FlatList
+      <FlashList
         data={topics}
         keyExtractor={(item) => item.label}
         renderItem={({ item, index }) => {
